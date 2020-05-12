@@ -33,7 +33,8 @@ CONFIG_LTO=y
 #CONFIG_WERROR=y
 # force 32 bit build for some utilities
 #CONFIG_M32=y
-
+# cross compilation form RISCV target
+CONFIG_RISCV=y
 ifdef CONFIG_DARWIN
 # use clang instead of gcc
 CONFIG_CLANG=y
@@ -55,6 +56,9 @@ OBJDIR=.obj
 ifdef CONFIG_WIN32
   CROSS_PREFIX=i686-w64-mingw32-
   EXE=.exe
+else ifdef CONFIG_RISCV
+  CROSS_PREFIX=riscv64-unknown-linux-gnu-
+  EXE=
 else
   CROSS_PREFIX=
   EXE=
@@ -108,7 +112,10 @@ LDFLAGS=-g
 ifdef CONFIG_LTO
 CFLAGS_SMALL+=-flto
 CFLAGS_OPT+=-flto
-LDFLAGS+=-flto
+LDFLAGS+=-flto 
+endif
+ifdef CONFIG_RISCV
+LDFLAGS+=-latomic
 endif
 ifdef CONFIG_PROFILE
 CFLAGS+=-p
